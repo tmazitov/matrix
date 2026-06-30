@@ -36,23 +36,3 @@ func (m Matrix[K]) IsEqualSize(size [2]int) bool {
 	return s[0] == size[0] &&
 		s[1] == size[1]
 }
-
-func NewMatrix[K numberType](values [][]K) (Matrix[K], error) {
-	if err := validate(values); err != nil {
-		return nil, err
-	}
-	return Matrix[K](values), nil
-}
-
-func validate[K numberType](values [][]K) error {
-	if len(values) == 0 || len(values[0]) == 0 {
-		return ErrMatrixNil
-	}
-	n := len(values[0])
-	for _, column := range values[1:] {
-		if len(column) != n {
-			return ErrMatrixInvalidColumn
-		}
-	}
-	return nil
-}

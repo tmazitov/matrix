@@ -4,58 +4,14 @@ import (
 	"testing"
 )
 
-// --- Constructor ---
-
-func TestNewVector_Valid(t *testing.T) {
-	cases := []struct {
-		name   string
-		values []int
-	}{
-		{"single element", []int{1}},
-		{"multiple elements", []int{1, 2, 3, 4, 5}},
-	}
-
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			v, err := NewVector(tc.values)
-			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			if len(v) != len(tc.values) {
-				t.Errorf("got len %d, want %d", len(v), len(tc.values))
-			}
-		})
-	}
-}
-
-func TestNewVector_Invalid(t *testing.T) {
-	cases := []struct {
-		name    string
-		values  []int
-		wantErr error
-	}{
-		{"nil slice", nil, ErrVectorNil},
-		{"empty slice", []int{}, ErrVectorNil},
-	}
-
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			_, err := NewVector(tc.values)
-			if err != tc.wantErr {
-				t.Errorf("got err %v, want %v", err, tc.wantErr)
-			}
-		})
-	}
-}
-
-// --- Sum ---
+// --- Add ---
 
 func TestSum_Valid(t *testing.T) {
-	a, _ := NewVector([]int{1, 2, 3})
-	b, _ := NewVector([]int{4, 5, 6})
-	got := a.Sum(b)
+	a := Vector[int]{1, 2, 3}
+	b := Vector[int]{4, 5, 6}
+	got := a.Add(b)
 	if got == nil {
-		t.Fatal("Sum returned nil")
+		t.Fatal("Add returned nil")
 	}
 	expected := []int{5, 7, 9}
 	for i, want := range expected {
@@ -66,19 +22,19 @@ func TestSum_Valid(t *testing.T) {
 }
 
 func TestSum_LengthMismatch(t *testing.T) {
-	a, _ := NewVector([]int{1, 2, 3})
-	b, _ := NewVector([]int{1, 2})
-	if got := a.Sum(b); got != nil {
+	a := Vector[int]{1, 2, 3}
+	b := Vector[int]{1, 2}
+	if got := a.Add(b); got != nil {
 		t.Errorf("expected nil for length mismatch, got %v", got)
 	}
 }
 
 func TestSum_Float(t *testing.T) {
-	a, _ := NewVector([]float64{1.1, 2.2})
-	b, _ := NewVector([]float64{0.9, 0.8})
-	got := a.Sum(b)
+	a := Vector[float64]{1.1, 2.2}
+	b := Vector[float64]{0.9, 0.8}
+	got := a.Add(b)
 	if got == nil {
-		t.Fatal("Sum returned nil")
+		t.Fatal("Add returned nil")
 	}
 	if got[0] < 1.99 || got[0] > 2.01 {
 		t.Errorf("[0] got %v, want ~2.0", got[0])
@@ -91,8 +47,8 @@ func TestSum_Float(t *testing.T) {
 // --- Sub ---
 
 func TestSub_Valid(t *testing.T) {
-	a, _ := NewVector([]int{10, 20, 30})
-	b, _ := NewVector([]int{1, 2, 3})
+	a := Vector[int]{10, 20, 30}
+	b := Vector[int]{1, 2, 3}
 	got := a.Sub(b)
 	if got == nil {
 		t.Fatal("Sub returned nil")
@@ -106,16 +62,16 @@ func TestSub_Valid(t *testing.T) {
 }
 
 func TestSub_LengthMismatch(t *testing.T) {
-	a, _ := NewVector([]int{1, 2})
-	b, _ := NewVector([]int{1, 2, 3})
+	a := Vector[int]{1, 2}
+	b := Vector[int]{1, 2, 3}
 	if got := a.Sub(b); got != nil {
 		t.Errorf("expected nil for length mismatch, got %v", got)
 	}
 }
 
 func TestSub_Negative(t *testing.T) {
-	a, _ := NewVector([]int{1, 2})
-	b, _ := NewVector([]int{3, 5})
+	a := Vector[int]{1, 2}
+	b := Vector[int]{3, 5}
 	got := a.Sub(b)
 	if got == nil {
 		t.Fatal("Sub returned nil")
@@ -128,7 +84,7 @@ func TestSub_Negative(t *testing.T) {
 // --- Scl ---
 
 func TestScl_Valid(t *testing.T) {
-	a, _ := NewVector([]int{1, 2, 3})
+	a := Vector[int]{1, 2, 3}
 	got := a.Scl(4)
 	if got == nil {
 		t.Fatal("Scl returned nil")
@@ -142,7 +98,7 @@ func TestScl_Valid(t *testing.T) {
 }
 
 func TestScl_Zero(t *testing.T) {
-	a, _ := NewVector([]int{5, 10, 15})
+	a := Vector[int]{5, 10, 15}
 	got := a.Scl(0)
 	if got == nil {
 		t.Fatal("Scl returned nil")
@@ -155,7 +111,7 @@ func TestScl_Zero(t *testing.T) {
 }
 
 func TestScl_Negative(t *testing.T) {
-	a, _ := NewVector([]int{2, 4, 6})
+	a := Vector[int]{2, 4, 6}
 	got := a.Scl(-1)
 	if got == nil {
 		t.Fatal("Scl returned nil")
@@ -169,7 +125,7 @@ func TestScl_Negative(t *testing.T) {
 }
 
 func TestScl_Float(t *testing.T) {
-	a, _ := NewVector([]float64{1.0, 2.0, 3.0})
+	a := Vector[float64]{1.0, 2.0, 3.0}
 	got := a.Scl(0.5)
 	if got == nil {
 		t.Fatal("Scl returned nil")

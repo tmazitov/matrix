@@ -1,6 +1,6 @@
 package vector
 
-func (v Vector[K]) Sum(w Vector[K]) Vector[K] {
+func (v Vector[K]) Add(w Vector[K]) Vector[K] {
 
 	if len(v) != len(w) {
 		return nil

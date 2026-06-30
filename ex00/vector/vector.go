@@ -5,10 +5,3 @@ type numberType interface {
 }
 
 type Vector[K numberType] []K
-
-func NewVector[K numberType](values []K) (Vector[K], error) {
-	if len(values) == 0 {
-		return nil, ErrVectorNil
-	}
-	return Vector[K](values), nil
-}

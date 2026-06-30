@@ -4,50 +4,24 @@ import (
 	"testing"
 )
 
-// --- Constructor ---
+// --- Size ---
 
-func TestNewMatrix_Valid(t *testing.T) {
+func TestSize(t *testing.T) {
 	cases := []struct {
 		name   string
-		values [][]int
+		values Matrix[int]
 		size   [2]int
 	}{
-		{"1x1", [][]int{{42}}, [2]int{1, 1}},
-		{"2x2", [][]int{{1, 2}, {3, 4}}, [2]int{2, 2}},
-		{"3x2", [][]int{{1, 2}, {3, 4}, {5, 6}}, [2]int{3, 2}},
+		{"1x1", Matrix[int]{{42}}, [2]int{1, 1}},
+		{"2x2", Matrix[int]{{1, 2}, {3, 4}}, [2]int{2, 2}},
+		{"3x2", Matrix[int]{{1, 2}, {3, 4}, {5, 6}}, [2]int{3, 2}},
+		{"empty", Matrix[int]{}, [2]int{0, 0}},
 	}
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			m, err := NewMatrix(tc.values)
-			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			if m.Size() != tc.size {
-				t.Errorf("got size %v, want %v", m.Size(), tc.size)
-			}
-		})
-	}
-}
-
-func TestNewMatrix_Invalid(t *testing.T) {
-	cases := []struct {
-		name    string
-		values  [][]int
-		wantErr error
-	}{
-		{"nil slice", nil, ErrMatrixNil},
-		{"empty outer", [][]int{}, ErrMatrixNil},
-		{"empty inner", [][]int{{}}, ErrMatrixNil},
-		{"jagged rows", [][]int{{1, 2}, {3}}, ErrMatrixInvalidColumn},
-		{"first row longer", [][]int{{1, 2, 3}, {4, 5}}, ErrMatrixInvalidColumn},
-	}
-
-	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			_, err := NewMatrix(tc.values)
-			if err != tc.wantErr {
-				t.Errorf("got err %v, want %v", err, tc.wantErr)
+			if got := tc.values.Size(); got != tc.size {
+				t.Errorf("got size %v, want %v", got, tc.size)
 			}
 		})
 	}
@@ -56,7 +30,7 @@ func TestNewMatrix_Invalid(t *testing.T) {
 // --- GetValue ---
 
 func TestGetValue(t *testing.T) {
-	m, _ := NewMatrix([][]int{{1, 2, 3}, {4, 5, 6}})
+	m := Matrix[int]{{1, 2, 3}, {4, 5, 6}}
 
 	cases := []struct {
 		i, j   int
@@ -79,11 +53,24 @@ func TestGetValue(t *testing.T) {
 	}
 }
 
+// --- IsEqualSize ---
+
+func TestIsEqualSize(t *testing.T) {
+	m := Matrix[int]{{1, 2}, {3, 4}}
+
+	if !m.IsEqualSize([2]int{2, 2}) {
+		t.Error("expected size [2,2] to match")
+	}
+	if m.IsEqualSize([2]int{2, 3}) {
+		t.Error("expected size [2,3] not to match")
+	}
+}
+
 // --- Add ---
 
 func TestAdd_Valid(t *testing.T) {
-	a, _ := NewMatrix([][]int{{1, 2}, {3, 4}})
-	b, _ := NewMatrix([][]int{{5, 6}, {7, 8}})
+	a := Matrix[int]{{1, 2}, {3, 4}}
+	b := Matrix[int]{{5, 6}, {7, 8}}
 	got := a.Add(b)
 	if got == nil {
 		t.Fatal("Add returned nil")
@@ -100,16 +87,16 @@ func TestAdd_Valid(t *testing.T) {
 }
 
 func TestAdd_SizeMismatch(t *testing.T) {
-	a, _ := NewMatrix([][]int{{1, 2}, {3, 4}})
-	b, _ := NewMatrix([][]int{{1, 2, 3}})
+	a := Matrix[int]{{1, 2}, {3, 4}}
+	b := Matrix[int]{{1, 2, 3}}
 	if got := a.Add(b); got != nil {
 		t.Errorf("expected nil for size mismatch, got %v", got)
 	}
 }
 
 func TestAdd_Float(t *testing.T) {
-	a, _ := NewMatrix([][]float64{{1.5, 2.5}})
-	b, _ := NewMatrix([][]float64{{0.5, 1.5}})
+	a := Matrix[float64]{{1.5, 2.5}}
+	b := Matrix[float64]{{0.5, 1.5}}
 	got := a.Add(b)
 	if got == nil {
 		t.Fatal("Add returned nil")
@@ -123,8 +110,8 @@ func TestAdd_Float(t *testing.T) {
 // --- Sub ---
 
 func TestSub_Valid(t *testing.T) {
-	a, _ := NewMatrix([][]int{{10, 20}, {30, 40}})
-	b, _ := NewMatrix([][]int{{1, 2}, {3, 4}})
+	a := Matrix[int]{{10, 20}, {30, 40}}
+	b := Matrix[int]{{1, 2}, {3, 4}}
 	got := a.Sub(b)
 	if got == nil {
 		t.Fatal("Sub returned nil")
@@ -141,16 +128,16 @@ func TestSub_Valid(t *testing.T) {
 }
 
 func TestSub_SizeMismatch(t *testing.T) {
-	a, _ := NewMatrix([][]int{{1, 2}})
-	b, _ := NewMatrix([][]int{{1}, {2}})
+	a := Matrix[int]{{1, 2}}
+	b := Matrix[int]{{1}, {2}}
 	if got := a.Sub(b); got != nil {
 		t.Errorf("expected nil for size mismatch, got %v", got)
 	}
 }
 
 func TestSub_Negative(t *testing.T) {
-	a, _ := NewMatrix([][]int{{1, 2}})
-	b, _ := NewMatrix([][]int{{3, 5}})
+	a := Matrix[int]{{1, 2}}
+	b := Matrix[int]{{3, 5}}
 	got := a.Sub(b)
 	if got == nil {
 		t.Fatal("Sub returned nil")
@@ -165,7 +152,7 @@ func TestSub_Negative(t *testing.T) {
 // --- Scl ---
 
 func TestScl_Valid(t *testing.T) {
-	a, _ := NewMatrix([][]int{{1, 2}, {3, 4}})
+	a := Matrix[int]{{1, 2}, {3, 4}}
 	got := a.Scl(3)
 	if got == nil {
 		t.Fatal("Scl returned nil")
@@ -182,7 +169,7 @@ func TestScl_Valid(t *testing.T) {
 }
 
 func TestScl_Zero(t *testing.T) {
-	a, _ := NewMatrix([][]int{{5, 10}, {15, 20}})
+	a := Matrix[int]{{5, 10}, {15, 20}}
 	got := a.Scl(0)
 	if got == nil {
 		t.Fatal("Scl returned nil")
@@ -198,7 +185,7 @@ func TestScl_Zero(t *testing.T) {
 }
 
 func TestScl_Negative(t *testing.T) {
-	a, _ := NewMatrix([][]int{{2, 4}})
+	a := Matrix[int]{{2, 4}}
 	got := a.Scl(-1)
 	if got == nil {
 		t.Fatal("Scl returned nil")
