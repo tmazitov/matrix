@@ -1,7 +1,24 @@
 package vector
 
 type numberType interface {
-	~int | ~int64 | ~float64
+	~int | ~float64
 }
 
 type Vector[K numberType] []K
+
+func IsEqualDimension[K numberType](vectors ...Vector[K]) bool {
+
+	if len(vectors) == 0 || len(vectors) == 1 {
+		return true
+	}
+
+	init := vectors[0]
+
+	for _, v := range vectors {
+		if len(init) != len(v) {
+			return false
+		}
+	}
+
+	return true
+}

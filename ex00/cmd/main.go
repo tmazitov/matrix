@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ex00/matrix"
-	"ex00/vector"
 	"fmt"
+	"matrix/ex00/matrix"
+	"matrix/ex00/vector"
 )
 
 func main() {
@@ -17,6 +17,7 @@ func main() {
 	fmt.Printf("Sub: %v\n", v.Sub(w))
 	fmt.Printf("Scl: %v\n", v.Scl(5))
 
+	fmt.Println("Matrix operations:")
 	a1 := matrix.Matrix[float64]{
 		{1.1, 2.2, 3.5},
 		{1.1, 2.2, 3.5},

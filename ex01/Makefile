@@ -1,9 +1,11 @@
 .PHONY: all test build clean
 
+EX=ex01
+
 all: build
 
 build:
-	go build -o ex00 ./cmd
+	go build -o $(EX) ./cmd 
 
 test:
 	go test ./...

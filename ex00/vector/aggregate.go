@@ -2,7 +2,7 @@ package vector
 
 func (v Vector[K]) Add(w Vector[K]) Vector[K] {
 
-	if len(v) != len(w) {
+	if !IsEqualDimension(w, v) {
 		return nil
 	}
 
@@ -16,7 +16,7 @@ func (v Vector[K]) Add(w Vector[K]) Vector[K] {
 
 func (v Vector[K]) Sub(w Vector[K]) Vector[K] {
 
-	if len(v) != len(w) {
+	if !IsEqualDimension(w, v) {
 		return nil
 	}
 

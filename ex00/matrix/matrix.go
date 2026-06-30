@@ -1,7 +1,7 @@
 package matrix
 
 type numberType interface {
-	~int | ~int64 | ~float64
+	~int | ~float64
 }
 
 type Matrix[K numberType] [][]K
