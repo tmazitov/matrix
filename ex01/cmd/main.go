@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"matrix/ex00/vector"
-	"matrix/ex01/combination"
+	"matrix/ex01/vector"
 )
 
 func main() {
@@ -16,7 +15,7 @@ func main() {
 
 	coefs := []int{3, 2, 3}
 
-	newVector := combination.LinearCombination(vectors, coefs)
+	newVector := vector.LinearCombination(vectors, coefs)
 
 	fmt.Printf("Combination: %v\n", newVector)
 }
