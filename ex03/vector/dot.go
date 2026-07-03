@@ -4,7 +4,7 @@ func (v Vector[K]) Dot(u Vector[K]) K {
 
 	var result K
 	for i := range v {
-		result = FMA(v[i], u[i], result)
+		result = fma(v[i], u[i], result)
 	}
 
 	return result

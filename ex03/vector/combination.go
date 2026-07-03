@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-func FMA[K numberType](x, y, z K) K {
+func fma[K numberType](x, y, z K) K {
 	return K(math.FMA(float64(x), float64(y), float64(z)))
 }
 
@@ -17,7 +17,7 @@ func LinearCombination[K numberType](u []Vector[K], coefs []K) Vector[K] {
 	result := make(Vector[K], len(u[0]))
 	for i, vector := range u {
 		for j, value := range vector {
-			result[j] = FMA(value, coefs[i], result[j])
+			result[j] = fma(value, coefs[i], result[j])
 		}
 	}
 
