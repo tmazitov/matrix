@@ -90,7 +90,7 @@ func main() {
 			{-7.5, 8, 9},
 		},
 		// zero pivot column followed by usable pivot further right
-		// (whole first column is zero -> should skip to column 2)
+		// (whole first column is zero -> should skip to the second column)
 		{
 			{0, 1, 2},
 			{0, 3, 4},
@@ -108,18 +108,21 @@ func main() {
 			{0, 1, 0, -3},
 			{0, 0, 1, 2},
 		},
-		// rank-deficient 4x4 (last row is a combination of the others)
+		// rank-deficient 4x4 (last row is a trivial all-zero row appended
+		// to an otherwise full-rank 3x3 system)
 		{
 			{2, 1, -1, 8},
 			{-3, -1, 2, -11},
 			{-2, 1, 2, -3},
 			{0, 0, 0, 0},
 		},
-		// permutation-like matrix, needs multiple row swaps
+		// reverse-identity permutation, needs multiple row swaps
+		// (row0<->row3 to fix column 0, then row1<->row2 to fix column 1)
 		{
-			{0, 0, 1},
-			{0, 1, 0},
-			{1, 0, 0},
+			{0, 0, 0, 1},
+			{0, 0, 1, 0},
+			{0, 1, 0, 0},
+			{1, 0, 0, 0},
 		},
 		// very small / very large magnitude values
 		{
