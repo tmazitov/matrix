@@ -25,6 +25,8 @@ func (m Matrix[K]) Determinant() K {
 	}
 
 	switch size[0] {
+	case 1:
+		return m[0][0]
 	case 2:
 		return m.determinant2()
 	case 3:
