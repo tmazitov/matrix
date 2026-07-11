@@ -25,6 +25,11 @@ func main() {
 			{4., 7., 20.},
 			{7., 6., 1.},
 		},
+		// singular matrix -> Inverse must return ErrMatrixSingular
+		{
+			{1., 2.},
+			{2., 4.},
+		},
 	}
 
 	for i, matrix := range matrices {
@@ -32,7 +37,11 @@ func main() {
 		matrix.PrettyPrint()
 
 		fmt.Println("Inverse version is:")
-		v := matrix.Inverse()
+		v, err := matrix.Inverse()
+		if err != nil {
+			fmt.Println("error:", err)
+			continue
+		}
 		v.PrettyPrint()
 
 		fmt.Println("Check (A * A-1):")

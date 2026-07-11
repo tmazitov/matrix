@@ -19,19 +19,19 @@ func (m Matrix[K]) minor(x, y int) K {
 	return matrix.Determinant()
 }
 
-func (m Matrix[K]) Inverse() Matrix[K] {
+func (m Matrix[K]) Inverse() (Matrix[K], error) {
 
 	if m.IsZero() || !m.IsSquare() {
-		return nil
+		return nil, nil
 	}
 
 	det := m.Determinant()
 	if det == 0 {
-		return nil
+		return nil, ErrMatrixSingular
 	}
 
 	if len(m) == 1 {
-		return Matrix[K]{{1 / m[0][0]}}
+		return Matrix[K]{{1 / m[0][0]}}, nil
 	}
 
 	minorMatrix := make(Matrix[K], 0, len(m))
@@ -46,5 +46,5 @@ func (m Matrix[K]) Inverse() Matrix[K] {
 		minorMatrix = append(minorMatrix, row)
 	}
 
-	return minorMatrix.Scl(1 / det)
+	return minorMatrix.Scl(1 / det), nil
 }
