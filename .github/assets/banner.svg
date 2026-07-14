@@ -1,0 +1,37 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#00ADD8"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#E11D48"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="300" fill="#ffffff"/>
+
+  <!-- title -->
+  <text x="600" y="55" text-anchor="middle" font-size="40" font-weight="800" fill="#0f172a">Linear Algebra in Golang</text>
+
+  <!-- graph panel -->
+  <line x1="0" y1="90" x2="1200" y2="90" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="0" y="90" width="1200" height="210" fill="url(#grid)"/>
+
+  <!-- axes -->
+  <line x1="0" y1="260" x2="1200" y2="260" stroke="#9ca3af" stroke-width="1.4"/>
+  <line x1="120" y1="90" x2="120" y2="300" stroke="#9ca3af" stroke-width="1.4"/>
+
+  <!-- vectors from a common origin -->
+  <line x1="120" y1="260" x2="500" y2="110" stroke="#00ADD8" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowBlue)"/>
+  <line x1="120" y1="260" x2="640" y2="200" stroke="#E11D48" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowRed)"/>
+
+  <circle cx="120" cy="260" r="5.5" fill="#0f172a"/>
+
+  <!-- vector labels -->
+  <text x="518" y="98" font-size="22" font-style="italic" font-weight="700" fill="#00ADD8">u</text>
+  <text x="648" y="214" font-size="22" font-style="italic" font-weight="700" fill="#E11D48">v</text>
+</svg>
