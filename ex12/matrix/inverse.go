@@ -1,50 +1,40 @@
 package matrix
 
-func (m Matrix[K]) minor(x, y int) K {
-
-	if len(m) == 1 {
-		return m.Determinant()
-	}
-
-	matrix := make(Matrix[K], 0, len(m)-1)
-	for k := range len(m) {
-		if k == y {
-			continue
-		}
-		row := make([]K, len(m))
-		copy(row, m[k])
-		row = append(row[:x], row[x+1:]...)
-		matrix = append(matrix, row)
-	}
-	return matrix.Determinant()
-}
-
 func (m Matrix[K]) Inverse() (Matrix[K], error) {
 
 	if m.IsZero() || !m.IsSquare() {
 		return nil, nil
 	}
 
-	det := m.Determinant()
-	if det == 0 {
-		return nil, ErrMatrixSingular
+	n := len(m)
+
+	augmented := make(Matrix[K], n)
+	for i := range n {
+		row := make([]K, 2*n)
+		copy(row, m[i])
+		row[n+i] = 1
+		augmented[i] = row
 	}
 
-	if len(m) == 1 {
-		return Matrix[K]{{1 / m[0][0]}}, nil
-	}
+	reduced := augmented.RowEchelon()
 
-	minorMatrix := make(Matrix[K], 0, len(m))
-	for i := range len(m) {
-		row := make([]K, len(m))
-		for j := range len(m) {
-			row[j] = m.minor(i, j)
-			if (i+j)%2 == 1 && row[j] != 0 {
-				row[j] *= -1
+	inverse := make(Matrix[K], n)
+	for i := range n {
+
+		if reduced[i][i] != 1 {
+			return nil, ErrMatrixSingular
+		}
+
+		for j := range n {
+			if j != i && reduced[i][j] != 0 {
+				return nil, ErrMatrixSingular
 			}
 		}
-		minorMatrix = append(minorMatrix, row)
+
+		row := make([]K, n)
+		copy(row, reduced[i][n:])
+		inverse[i] = row
 	}
 
-	return minorMatrix.Scl(1 / det), nil
+	return inverse, nil
 }
